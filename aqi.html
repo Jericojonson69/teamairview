@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .header-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background-color: #acffb6;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 10px 5%;
+      position: fixed; 
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      z-index: 1000;
+    }
+
+    body {
+      font-family: Inter, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      overflow-x: hidden;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      padding-top: 70px; 
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .menu-icon {
+      font-size: 30px;
+      cursor: pointer;
+      margin-left: -47px;
+      display: block;
+    }
+
+    .profile-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .matter-indicator {
+      position: absolute;
+      top: 80px;
+      right: 5%;
+      background-color: #acffb6;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 12px 20px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    .matter-text {
+      margin: 0;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .matter-icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(80px + 70px);  
+      right: 5%;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 200px;
+      border-radius: 8px;
+      z-index: 100;
+    }
+
+    .dropdown-item {
+      text-decoration: none;
+      display: block;
+      font-size: 18px;
+      color: #555;
+      padding: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .menu-dropdown {
+      display: none;
+      position: absolute;
+      top: 50px;
+      left: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      z-index: 1000;
+      width: 250px;
+    }
+
+    .menu-dropdown-item {
+      text-decoration: none;
+      display: block;
+      font-size: 18px;
+      color: #555;
+      padding: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .menu-dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .reports-container {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      margin-top: 80px;
+      width: 100%;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hourly-title,
+    .weekly-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .hourly-chart {
+      display: grid;
+      grid-template-columns: repeat(16, 1fr);
+      gap: 10px;
+      background-color: rgba(144, 238, 144, 0.2);
+      border-radius: 15px;
+      padding: 50px 30px 30px;
+      border: 1px solid #ddd;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+
+    .hourly-chart div {
+      text-align: center;
+      font-weight: 400;
+      font-size: 14px;
+      color: #333;
+      padding: 100px 0 10px;
+    }
+
+    .weekly-chart {
+      display: flex;
+      justify-content: space-between;
+      gap: 25px;
+      background-color: rgba(144, 238, 144, 0.2);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid #ddd;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .chart-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .chart-column h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    .chart-item {
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #333;
+    }
+
+    .good-status {
+      color: #4CAF50;
+      font-weight: 500;
+    }
+
+    .moderate-status {
+      color: #FFC107;
+      font-weight: 500;
+    }
+
+    @media screen and (max-width: 1024px) {
+      .header-wrapper {
+        padding: 10px 5%;
+      }
+
+      .matter-indicator {
+        font-size: 14px;
+        padding: 10px;
+        right: 5%;
+      }
+
+      .hourly-chart {
+        padding: 40px 20px;
+      }
+
+      .weekly-chart {
+        padding: 15px;
+      }
+
+      .reports-container {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .matter-indicator {
+        top: 70px;
+        right: 5%;
+        font-size: 14px;
+        padding: 10px;
+      }
+      .menu-icon {
+    font-size: 28px; /* Slightly smaller icon for mobile */
+    margin-left: 20px; /* Adjusted margin for smaller screens */
+  }
+
+
+      .hourly-chart {
+        width: 100%;
+        padding: 40px 10px;
+        overflow-x: auto; /* Enable horizontal scroll */
+        white-space: nowrap; /* Prevent wrapping of content */
+      }
+
+      .weekly-chart {
+        width: 100%;
+        padding: 10px;
+      }
+
+      .reports-container {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .matter-indicator {
+        top: 70px;
+        right: 5%;
+        font-size: 12px;
+        padding: 8px;
+      }
+      .menu-icon {
+    font-size: 25px; /* Even smaller for very small screens */
+    margin-left: 10px;
+  }
+      
+      .hourly-chart {
+    width: 100%;
+    padding: 30px 5px;
+    overflow-x: auto; /* Enable horizontal scroll */
+    white-space: nowrap; /* Prevent wrapping of content */
+  }
+
+      .hourly-chart div {
+        font-size: 12px;
+      }
+
+      .weekly-chart {
+        width: 100%;
+      }
+
+      .page-title {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="menu-icon" id="menuIcon">&#9776;</div>
+    </div>
+    <img loading="lazy" src="assets/Icons/j.jpg" alt="User Profile" class="profile-image" />
+
+  </div>
+
+  <div class="matter-indicator" id="matterIndicator">
+    <div class="matter-text">Particulate Matter</div>
+    <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/3cb4a399d550af04d16960e6dfb82a85065821f8fede6e0d0c33ae10f9c6cebd" alt="Matter Icon" class="matter-icon" />
+  </div>
+
+  <div class="dropdown-menu" id="matterDropdown">
+    <a href="#" class="dropdown-item">Particulate Matter</a>
+    <a href="#" class="dropdown-item">Temperature</a>
+    <a href="#" class="dropdown-item">Humidity</a>
+  </div>
+
+  <div class="menu-dropdown" id="menuDropdown">
+    <a href="index.html" class="menu-dropdown-item">Dashboard</a>
+    <a href="aqi.html" class="menu-dropdown-item">AQI Recent Activity</a>
+    <a href="history.html" class="menu-dropdown-item">History</a>
+    <a href="notification.html" class="menu-dropdown-item">Notification</a>
+    <a href="settings.html" class="menu-dropdown-item">Settings</a>
+  </div>
+
+  <div class="reports-container">
+    <div>
+      <div class="hourly-title">Hourly Report</div>
+      <div class="hourly-chart">
+        <div>1<br />am</div>
+        <div>2<br />am</div>
+        <div>3<br />am</div>
+        <div>4<br />am</div>
+        <div>5<br />am</div>
+        <div>6<br />am</div>
+        <div>7<br />am</div>
+        <div>8<br />am</div>
+        <div>9<br />am</div>
+        <div>10<br />am</div>
+        <div>11<br />am</div>
+        <div>12<br />pm</div>
+        <div>1<br />pm</div>
+        <div>2<br />pm</div>
+        <div>3<br />pm</div>
+        <div>4<br />pm</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="weekly-title">Weekly AQI Report</div>
+      <div class="weekly-chart">
+        <div class="chart-column">
+          <h3>Day</h3>
+          <div class="chart-item">Sunday</div>
+          <div class="chart-item">Monday</div>
+          <div class="chart-item">Tuesday</div>
+          <div class="chart-item">Wednesday</div>
+          <div class="chart-item">Thursday</div>
+          <div class="chart-item">Friday</div>
+        </div>
+
+        <div class="chart-column">
+          <h3>AQI</h3>
+          <div class="chart-item">22</div>
+          <div class="chart-item">10</div>
+          <div class="chart-item">15</div>
+          <div class="chart-item">20</div>
+          <div class="chart-item">30</div>
+          <div class="chart-item">35</div>
+        </div>
+
+        <div class="chart-column">
+          <h3>Status</h3>
+          <div class="chart-item good-status">Good</div>
+          <div class="chart-item good-status">Good</div>
+          <div class="chart-item good-status">Good</div>
+          <div class="chart-item good-status">Good</div>
+          <div class="chart-item moderate-status">Moderate</div>
+          <div class="chart-item moderate-status">Moderate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const matterIndicator = document.getElementById('matterIndicator');
+    const matterDropdown = document.getElementById('matterDropdown');
+
+    matterIndicator.addEventListener('click', function () {
+      matterDropdown.style.display = matterDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!matterIndicator.contains(e.target) && !matterDropdown.contains(e.target)) {
+        matterDropdown.style.display = 'none';
+      }
+    });
+
+    const menuIcon = document.getElementById('menuIcon');
+    const menuDropdown = document.getElementById('menuDropdown');
+
+    menuIcon.addEventListener('click', function () {
+      menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!menuIcon.contains(e.target) && !menuDropdown.contains(e.target)) {
+        menuDropdown.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

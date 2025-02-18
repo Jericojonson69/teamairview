@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Full-width background for the menu icon and user picture */
+        .menu-bar {
+            width: 100%;
+            background-color: #acffb6; /* Set the background color */
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .menu-user-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .menu-icon {
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .user-picture {
+            width: 40px;
+            height: 40px;
+            background-color: gray;
+            border-radius: 50%;
+            object-fit: cover; /* Ensure the image fits into the circle */
+        }
+
+        /* Dropdown menu styling matching settings.html */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1000;
+            width: 250px;
+        }
+
+        .dropdown-item {
+            text-decoration: none;
+            display: block;
+            font-family: "Arial", sans-serif; /* Matching font-family */
+            font-size: 18px; /* Increased font size */
+            color: #6b6b6b; /* Dark gray with a touch of light gray */
+            padding: 12px 20px; /* Slightly more padding for better space */
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f0f0f0; /* Subtle background on hover */
+            color: #333; /* Darker text color on hover for contrast */
+        }
+
+        /* For the rest of the page */
+        .content-area {
+            margin-top: 100px; /* Space for fixed header */
+            padding: 20px;
+        }
+
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen">
+
+    <!-- Full-width background for the menu icon and user picture -->
+    <div class="menu-bar">
+        <div class="menu-user-container">
+            <div class="menu-icon" id="menuIcon">&#9776;</div>
+            <h1 class="text-gray-900 text-2xl font-bold">HISTORY</h1>
+            <!-- User profile picture -->
+            <img src="assets/Icons/j.jpg" alt="User Profile" class="user-picture" />
+        </div>
+    </div>
+
+    <!-- Dropdown menu (hidden initially) -->
+    <div class="dropdown-menu" id="dropdownMenu">
+        <a href="index.html" class="dropdown-item">Dashboard</a>
+        <a href="aqi.html" class="dropdown-item">AQI Recent Activity</a>
+        <a href="history.html" class="dropdown-item">History</a>
+        <a href="notification.html" class="dropdown-item">Notification</a>
+        <a href="settings.html" class="dropdown-item">Settings</a>
+    </div>
+
+    <!-- Content area with filter dropdown and charts -->
+    <div class="content-area">
+        <!-- Filter dropdown -->
+        <div class="mb-6">
+            <label class="block text-gray-700 font-medium">Filter</label>
+            <select class="w-full p-3 border rounded-lg bg-gray-100">
+                <option>Yearly</option>
+                <option>Monthly</option>
+                <option>Weekly</option>
+            </select>
+        </div>
+        
+        <!-- Chart sections -->
+        <div class="space-y-6">
+            <div class="bg-gray-900 p-5 rounded-lg shadow-md">
+                <h2 class="text-white mb-3 text-center font-semibold">Particulate Matter</h2>
+                <canvas id="pmChart"></canvas>
+            </div>
+            <div class="bg-gray-900 p-5 rounded-lg shadow-md">
+                <h2 class="text-white mb-3 text-center font-semibold">Air Temperature</h2>
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div class="bg-gray-900 p-5 rounded-lg shadow-md">
+                <h2 class="text-white mb-3 text-center font-semibold">Air Humidity</h2>
+                <canvas id="humidityChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to toggle the menu
+        const menuIcon = document.getElementById('menuIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        menuIcon.addEventListener('click', () => {
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!menuIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+        });
+
+        // Create live charts
+        function createLiveChart(canvasId, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const dataPoints = Array.from({ length: 10 }, () => Math.random() * 100);
+            
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: 10 }, (_, i) => i + 1),
+                    datasets: [{
+                        data: dataPoints,
+                        borderColor: color,
+                        backgroundColor: color + '50',
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        x: { display: true, ticks: { color: 'white' } }, 
+                        y: { 
+                            display: true,
+                            ticks: { color: 'white' }
+                        } 
+                    }
+                }
+            });
+            
+            function updateChart() {
+                dataPoints.shift();
+                dataPoints.push(Math.random() * 100);
+                chart.data.datasets[0].data = dataPoints;
+                chart.update();
+            }
+            setInterval(updateChart, 1000);
+        }
+        
+        createLiveChart('pmChart', 'green');
+        createLiveChart('tempChart', 'gray');
+        createLiveChart('humidityChart', 'brown');
+    </script>
+</body>
+</html>

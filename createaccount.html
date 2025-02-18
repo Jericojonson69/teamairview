@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Exported Figma Design</title>
+  <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --font-family-poppins: 'Poppins', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family-poppins);
+      background-color: #fff;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .text-link {
+      color: #00b2ff;
+      cursor: pointer;
+      position: relative;
+      right: -90px;
+      width: auto;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+      margin-top: 20px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .text-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #000;
+      text-align: left;
+      display: block;
+      margin: 10px auto 5px;
+      width: 100%;
+    }
+
+    .text-input {
+      height: 37px;
+      border: 1px solid #a9a9a9;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 12px;
+      display: block;
+      margin: auto;
+      width: 100%;
+    }
+
+    .button {
+      background-color: #171f1d;
+      color: white;
+      height: 40px;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px auto;
+      width: 100%;
+    }
+
+    .button:hover {
+      background-color: #333;
+    }
+
+    .logo {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 450px;
+      }
+      .text-input, .button {
+        height: 45px;
+        font-size: 14px;
+      }
+      .logo {
+        max-width: 350px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 500px;
+      }
+      .text-input, .button {
+        height: 50px;
+        font-size: 16px;
+      }
+      .logo {
+        max-width: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <p class="text-link" onclick="redirectToLogin()">Already have an account?</p>
+  <div class="container">
+    <img src="image3.png" alt="Airview Logo" class="logo">
+    <p class="title">SIGN UP to AIRVIEW</p>
+    <p class="text-label">Firstname</p>
+    <input type="text" class="text-input" placeholder="Enter Your First Name">
+
+    <p class="text-label">Lastname</p>
+    <input type="text" class="text-input" placeholder="Enter Your Last Name">
+
+    <p class="text-label">Email</p>
+    <input type="email" class="text-input" placeholder="Enter Your G-Suzite Account">
+
+    <p class="text-label">Password</p>
+    <input type="password" class="text-input" placeholder="Enter Your Password">
+
+    <p class="text-label">Confirm Password</p>
+    <input type="password" class="text-input" placeholder="Re-type Your Password">
+
+    <div class="button" onclick="redirectToDashboard()">Create</div>
+  </div>
+
+  <script>
+    function redirectToLogin() {
+      window.location.href = 'login.html';
+    }
+    function redirectToDashboard() {
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
